@@ -22,7 +22,7 @@ public class BankAccount {
   @NotBlank(message = "'accountNumber' is required")
   private String accountNumber;
 
-  @NotBlank(message = "'accountOwner' is required")
-  private String accountOwner;
+  @NotBlank(message = "'numIdentityDoc' is required")
+  private String numIdentityDocCustomer;
 
 }
