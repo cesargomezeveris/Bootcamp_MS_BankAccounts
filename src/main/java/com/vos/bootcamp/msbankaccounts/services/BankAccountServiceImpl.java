@@ -3,9 +3,11 @@ package com.vos.bootcamp.msbankaccounts.services;
 import com.vos.bootcamp.msbankaccounts.models.BankAccount;
 import com.vos.bootcamp.msbankaccounts.repositories.IBankAccountRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
+@Service
 public class BankAccountServiceImpl implements IBankAccountService {
 
   @Autowired
