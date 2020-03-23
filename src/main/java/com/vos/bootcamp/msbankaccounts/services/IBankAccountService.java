@@ -11,14 +11,6 @@ public interface IBankAccountService {
 
   public Flux<BankAccount> findAllByNumIdeDoc(String numIdeDoc);
 
-  public Mono<Boolean> existsCustomer(String id);
-
-  public Mono<CustomerType> getCustomerType(String id);
-
-  public Mono<Number> getCountBankAccounts(String numIdeDoc);
-
-  public Mono<Number> getCountBankAccountsByType(String numIdeDoc, String type);
-
   public Mono<BankAccount> findById(String id);
 
   public Mono<BankAccount> save(BankAccount bankAccount);

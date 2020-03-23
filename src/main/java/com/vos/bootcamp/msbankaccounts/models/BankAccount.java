@@ -1,5 +1,6 @@
 package com.vos.bootcamp.msbankaccounts.models;
 
+import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -24,5 +25,8 @@ public class BankAccount {
 
   @NotBlank(message = "'numIdentityDoc' is required")
   private String numIdentityDocCustomer;
+
+  @Valid
+  private BankAccountType bankAccountType;
 
 }

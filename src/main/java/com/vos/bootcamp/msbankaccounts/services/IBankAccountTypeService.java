@@ -16,6 +16,6 @@ public interface IBankAccountTypeService {
 
   public Mono<Void> delete(BankAccountType bankAccountType);
 
-  public Mono<Void> deleteById(String id);
+  public Mono<BankAccountType> deleteById(String id);
 
 }

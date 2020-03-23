@@ -6,6 +6,6 @@ import reactor.core.publisher.Flux;
 
 public interface IBankAccountRepository extends ReactiveMongoRepository<BankAccount, String> {
 
-  public Flux<BankAccount> findAllByNumIdentityDoc(String numDoc);
+  public Flux<BankAccount> findByNumIdentityDocCustomer(String numDoc);
 
 }

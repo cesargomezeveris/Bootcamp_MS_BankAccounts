@@ -1,7 +1,8 @@
-package com.vos.bootcamp.msbankaccounts.services;
+package com.vos.bootcamp.msbankaccounts.services.Implementations;
 
 import com.vos.bootcamp.msbankaccounts.models.BankAccountType;
 import com.vos.bootcamp.msbankaccounts.repositories.IBankAccountTypeRepository;
+import com.vos.bootcamp.msbankaccounts.services.IBankAccountTypeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;

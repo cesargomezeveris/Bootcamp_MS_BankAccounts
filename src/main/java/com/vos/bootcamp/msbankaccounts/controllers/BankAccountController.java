@@ -26,7 +26,7 @@ public class BankAccountController {
   ===================================== */
   @GetMapping
   @ApiOperation(value = "List all BankAccounts", notes = "List all BankAccounts of Collections")
-  public Mono<ResponseEntity<Flux<BankAccount>>> getCustomers() {
+  public Mono<ResponseEntity<Flux<BankAccount>>> getBankAccounts() {
     return Mono.just(ResponseEntity
             .ok()
             .contentType(MediaType.APPLICATION_JSON)
