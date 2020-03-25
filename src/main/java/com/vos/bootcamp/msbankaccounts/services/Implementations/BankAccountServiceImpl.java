@@ -11,8 +11,15 @@ import reactor.core.publisher.Mono;
 @Service
 public class BankAccountServiceImpl implements IBankAccountService {
 
-  @Autowired
-  private IBankAccountRepository repository;
+  private final IBankAccountRepository repository;
+  private final ValidBankAccountsServiceImpl validateService;
+
+  public BankAccountServiceImpl(IBankAccountRepository repository, ValidBankAccountsServiceImpl service) {
+    this.repository = repository;
+    this.validateService = service;
+  }
+
+
 
   @Override
   public Flux<BankAccount> findAll() {
@@ -31,7 +38,18 @@ public class BankAccountServiceImpl implements IBankAccountService {
 
   @Override
   public Mono<BankAccount> save(BankAccount bankAccount) {
-    return repository.save(bankAccount);
+
+    Mono<Boolean> validRes = validateService.validPersonalCustomer(bankAccount.getNumIdentityDocCustomer()
+            ,bankAccount.getBankAccountType().getName());
+
+    Mono<BankAccount> res = validRes.flatMap(resValid -> {
+      if (resValid) {
+        return repository.save(bankAccount);
+      } else {
+        return Mono.error(new Exception("Ocurrio un problema"));
+      }
+    });
+    return res;
   }
 
   @Override
