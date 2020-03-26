@@ -1,4 +1,4 @@
-package com.vos.bootcamp.msbankaccounts.services.Implementations;
+package com.vos.bootcamp.msbankaccounts.services.implementations;
 
 import com.vos.bootcamp.msbankaccounts.models.BankAccountType;
 import com.vos.bootcamp.msbankaccounts.repositories.IBankAccountTypeRepository;

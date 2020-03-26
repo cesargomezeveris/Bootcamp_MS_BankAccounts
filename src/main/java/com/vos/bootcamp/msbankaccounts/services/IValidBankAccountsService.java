@@ -13,7 +13,7 @@ public interface IValidBankAccountsService {
 
   public Mono<Number> getCountBankAccountsByType(String numIdeDoc, String type);
 
-  public Mono<Boolean> validPersonalCustomer(String numDoc, String type);
+  public Mono<Boolean> validateRegisterCustomer(String numDoc, String type);
 
 
 }

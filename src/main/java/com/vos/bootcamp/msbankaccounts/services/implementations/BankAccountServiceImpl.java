@@ -1,22 +1,25 @@
-package com.vos.bootcamp.msbankaccounts.services.Implementations;
+package com.vos.bootcamp.msbankaccounts.services.implementations;
 
 import com.vos.bootcamp.msbankaccounts.models.BankAccount;
 import com.vos.bootcamp.msbankaccounts.repositories.IBankAccountRepository;
 import com.vos.bootcamp.msbankaccounts.services.IBankAccountService;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.vos.bootcamp.msbankaccounts.services.IValidBankAccountsService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
+@Slf4j
 @Service
 public class BankAccountServiceImpl implements IBankAccountService {
 
   private final IBankAccountRepository repository;
-  private final ValidBankAccountsServiceImpl validateService;
+  private final IValidBankAccountsService validateService;
 
-  public BankAccountServiceImpl(IBankAccountRepository repository, ValidBankAccountsServiceImpl service) {
+  public BankAccountServiceImpl(IBankAccountRepository repository,
+                                IValidBankAccountsService validateService) {
     this.repository = repository;
-    this.validateService = service;
+    this.validateService = validateService;
   }
 
 
@@ -39,17 +42,18 @@ public class BankAccountServiceImpl implements IBankAccountService {
   @Override
   public Mono<BankAccount> save(BankAccount bankAccount) {
 
-    Mono<Boolean> validRes = validateService.validPersonalCustomer(bankAccount.getNumIdentityDocCustomer()
-            ,bankAccount.getBankAccountType().getName());
+    Mono<Boolean> validRes = validateService.validateRegisterCustomer(
+            bankAccount.getNumIdentityDocCustomer(),
+            bankAccount.getBankAccountType().getName());
 
-    Mono<BankAccount> res = validRes.flatMap(resValid -> {
+    return validRes.flatMap(resValid -> {
       if (resValid) {
         return repository.save(bankAccount);
       } else {
-        return Mono.error(new Exception("Ocurrio un problema"));
+        log.error("Ocurrio un problema, revisar las validaciones");
+        return Mono.error(new Exception("Ocurrio un problema, revisar las validaciones"));
       }
     });
-    return res;
   }
 
   @Override

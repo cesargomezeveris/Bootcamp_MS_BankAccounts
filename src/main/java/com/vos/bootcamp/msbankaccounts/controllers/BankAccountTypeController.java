@@ -4,29 +4,39 @@ import com.vos.bootcamp.msbankaccounts.models.BankAccountType;
 import com.vos.bootcamp.msbankaccounts.services.IBankAccountTypeService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
-import org.springframework.beans.factory.annotation.Autowired;
+import java.net.URI;
+import javax.validation.Valid;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
-import javax.validation.Valid;
-import java.net.URI;
 
 @RestController
 @RequestMapping("/api/bankAccountTypes")
 @Api(value = "Bank Accounts Microservice")
 public class BankAccountTypeController {
 
-  @Autowired
-  private IBankAccountTypeService service;
+  private final IBankAccountTypeService service;
+
+  public BankAccountTypeController(IBankAccountTypeService service) {
+    this.service = service;
+  }
 
   /* =====================================
     Function to List all bankAccounts Types
   ===================================== */
   @GetMapping
-  @ApiOperation(value = "List all bankAccountTypes", notes = "List all BankAccountsTypes of Collections")
+  @ApiOperation(value = "List all bankAccountTypes",
+                notes = "List all BankAccountsTypes of Collections")
   public Flux<BankAccountType> getBankAccountsTypes() {
     return service.findAll();
   }
@@ -50,8 +60,11 @@ public class BankAccountTypeController {
     =============================================== */
 
   @PostMapping
-  @ApiOperation(value = "Create BankAccountTypes", notes="Create bankAccountTypes, check the model please")
-  public Mono<ResponseEntity<BankAccountType>> createBankAccountTypes(@Valid @RequestBody BankAccountType bankAccountType){
+  @ApiOperation(value = "Create BankAccountTypes",
+                notes = "Create bankAccountTypes, check the model please")
+  public Mono<ResponseEntity<BankAccountType>> createBankAccountTypes(
+          @Valid @RequestBody BankAccountType bankAccountType) {
+
     return service.save(bankAccountType)
             .map(bankAccountTypeDB -> ResponseEntity
                     .created(URI.create("/api/bankAccountTypes/".concat(bankAccountTypeDB.getId())))
@@ -65,8 +78,9 @@ public class BankAccountTypeController {
     =============================================== */
 
   @PutMapping("/{id}")
-  @ApiOperation(value = "Update BankAccountTypes", notes="Update bankAccountTypes by ID")
-  public Mono<ResponseEntity<BankAccountType>> updateBankAccountTypes(@PathVariable String id, @RequestBody BankAccountType bankAccountType) {
+  @ApiOperation(value = "Update BankAccountTypes", notes = "Update bankAccountTypes by ID")
+  public Mono<ResponseEntity<BankAccountType>> updateBankAccountTypes(
+          @PathVariable String id, @RequestBody BankAccountType bankAccountType) {
     return service.update(id, bankAccountType)
             .map(bankAccountTypeDB -> ResponseEntity
                     .created(URI.create("/api/bankAccountTypes/".concat(bankAccountTypeDB.getId())))
@@ -83,7 +97,7 @@ public class BankAccountTypeController {
     =============================================== */
 
   @DeleteMapping("/{id}")
-  @ApiOperation(value = "Delete a BankAccountType", notes="Delete a bank account Type by ID")
+  @ApiOperation(value = "Delete a BankAccountType", notes = "Delete a bank account Type by ID")
   public Mono<ResponseEntity<Void>> deleteByIdBankAccountTypes(@PathVariable String id) {
     return service.deleteById(id)
             .map(res -> ResponseEntity.ok().<Void>build())
