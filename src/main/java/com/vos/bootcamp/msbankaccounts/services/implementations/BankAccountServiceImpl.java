@@ -3,7 +3,7 @@ package com.vos.bootcamp.msbankaccounts.services.implementations;
 import com.vos.bootcamp.msbankaccounts.models.BankAccount;
 import com.vos.bootcamp.msbankaccounts.repositories.IBankAccountRepository;
 import com.vos.bootcamp.msbankaccounts.services.IBankAccountService;
-import com.vos.bootcamp.msbankaccounts.services.IValidBankAccountsService;
+import com.vos.bootcamp.msbankaccounts.services.IValidateBankAccountsService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
@@ -14,10 +14,10 @@ import reactor.core.publisher.Mono;
 public class BankAccountServiceImpl implements IBankAccountService {
 
   private final IBankAccountRepository repository;
-  private final IValidBankAccountsService validateService;
+  private final IValidateBankAccountsService validateService;
 
   public BankAccountServiceImpl(IBankAccountRepository repository,
-                                IValidBankAccountsService validateService) {
+                                IValidateBankAccountsService validateService) {
     this.repository = repository;
     this.validateService = validateService;
   }

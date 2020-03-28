@@ -2,19 +2,21 @@ package com.vos.bootcamp.msbankaccounts.services.implementations;
 
 import com.vos.bootcamp.msbankaccounts.models.CustomerType;
 import com.vos.bootcamp.msbankaccounts.repositories.IBankAccountRepository;
-import com.vos.bootcamp.msbankaccounts.services.IValidBankAccountsService;
+import com.vos.bootcamp.msbankaccounts.services.IValidateBankAccountsService;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
 
 @Slf4j
 @Service
-public class ValidBankAccountsServiceImpl implements IValidBankAccountsService {
+public class ValidateBankAccountsServiceImpl implements IValidateBankAccountsService {
 
-  @Autowired
-  private IBankAccountRepository repository;
+  private final IBankAccountRepository repository;
+
+  public ValidateBankAccountsServiceImpl(IBankAccountRepository repository) {
+    this.repository = repository;
+  }
 
   @Override
   public Mono<Boolean> existsCustomer(String id) {
@@ -39,7 +41,7 @@ public class ValidBankAccountsServiceImpl implements IValidBankAccountsService {
 
   @Override
   public Mono<Number> getCountBankAccounts(String numIdeDoc) {
-    return Mono.from(repository.findByNumIdentityDocCustomer(numIdeDoc).count());
+    return Mono.from(repository.countAllByNumIdentityDocCustomer(numIdeDoc));
   }
 
 

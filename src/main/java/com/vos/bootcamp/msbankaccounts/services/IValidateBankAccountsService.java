@@ -3,7 +3,7 @@ package com.vos.bootcamp.msbankaccounts.services;
 import com.vos.bootcamp.msbankaccounts.models.CustomerType;
 import reactor.core.publisher.Mono;
 
-public interface IValidBankAccountsService {
+public interface IValidateBankAccountsService {
 
   public Mono<Boolean> existsCustomer(String id);
 

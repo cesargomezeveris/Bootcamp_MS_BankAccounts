@@ -11,8 +11,11 @@ import reactor.core.publisher.Mono;
 @Service
 public class BankAccountTypeServiceImpl implements IBankAccountTypeService {
 
-  @Autowired
-  private IBankAccountTypeRepository repository;
+  private final IBankAccountTypeRepository repository;
+
+  public BankAccountTypeServiceImpl(IBankAccountTypeRepository repository) {
+    this.repository = repository;
+  }
 
   @Override
   public Flux<BankAccountType> findAll() {
