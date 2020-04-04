@@ -9,6 +9,10 @@ public interface IBankAccountRepository extends ReactiveMongoRepository<BankAcco
 
   public Flux<BankAccount> findByNumIdentityDocCustomer(String numDoc);
 
+  public Mono<BankAccount> findByAccountNumber(String accountNumber);
+
+  public Mono<Boolean> existsByAccountNumber(String accountNumber);
+
   public Mono<Number> countAllByNumIdentityDocCustomer(String numDoc);
 
 }

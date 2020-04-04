@@ -11,6 +11,8 @@ public interface IBankAccountService {
 
   public Flux<BankAccount> findAllByNumIdeDoc(String numIdeDoc);
 
+  public Mono<BankAccount> findByAccountNumber(String accountNumber);
+
   public Mono<BankAccount> findById(String id);
 
   public Mono<BankAccount> save(BankAccount bankAccount);
@@ -20,5 +22,7 @@ public interface IBankAccountService {
   public Mono<Void> delete(BankAccount customer);
 
   public Mono<Void> deleteById(String id);
+
+  public Mono<Boolean> existsByAccountNumber(String accountNumber);
 
 }

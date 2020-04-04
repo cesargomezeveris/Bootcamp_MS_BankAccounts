@@ -54,6 +54,35 @@ public class BankAccountController {
   }
 
   /* ===============================================
+     Function to obtain a bankAccount by accountNumber
+  =================================================== */
+  @GetMapping("/accountNumber/{accountNumber}")
+  @ApiOperation(value = "Get a BankAccount", notes = "Get a BankAccount by accountNumber")
+  public Mono<ResponseEntity<BankAccount>> getByAccountNumber(@PathVariable String accountNumber) {
+    return service.findByAccountNumber(accountNumber)
+            .map(ResponseEntity::ok)
+            .defaultIfEmpty(ResponseEntity
+                    .notFound()
+                    .build()
+            );
+
+  }
+
+  /* ===============================================
+      Function to know if the Bank Account exists
+   ================================================= */
+  @GetMapping("/{accountNumber}/exist")
+  @ApiOperation(value = "Bank Account exists", notes = "Validate if bank Account exists")
+  public Mono<ResponseEntity<Boolean>> exitsBankAccount(@PathVariable String accountNumber) {
+    return service.existsByAccountNumber(accountNumber)
+            .map(ResponseEntity::ok)
+            .defaultIfEmpty(ResponseEntity
+                    .notFound()
+                    .build()
+            );
+  }
+
+  /* ===============================================
             Function to create a bankAccount
   =============================================== */
   @PostMapping

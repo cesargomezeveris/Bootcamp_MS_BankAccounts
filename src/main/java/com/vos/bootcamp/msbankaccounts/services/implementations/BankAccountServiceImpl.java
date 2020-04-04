@@ -22,8 +22,6 @@ public class BankAccountServiceImpl implements IBankAccountService {
     this.validateService = validateService;
   }
 
-
-
   @Override
   public Flux<BankAccount> findAll() {
     return repository.findAll();
@@ -35,8 +33,19 @@ public class BankAccountServiceImpl implements IBankAccountService {
   }
 
   @Override
+  public Mono<BankAccount> findByAccountNumber(String accountNumber) {
+    return repository.findByAccountNumber(accountNumber);
+  }
+
+  @Override
   public Mono<BankAccount> findById(String id) {
     return repository.findById(id);
+  }
+
+
+  @Override
+  public Mono<Boolean> existsByAccountNumber(String accountNumber) {
+    return repository.existsByAccountNumber(accountNumber);
   }
 
   @Override
@@ -82,4 +91,5 @@ public class BankAccountServiceImpl implements IBankAccountService {
     return repository.findById(id)
             .flatMap(this::delete);
   }
+
 }
