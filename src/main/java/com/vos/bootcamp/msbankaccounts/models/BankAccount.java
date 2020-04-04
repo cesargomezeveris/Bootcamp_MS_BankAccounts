@@ -1,5 +1,7 @@
 package com.vos.bootcamp.msbankaccounts.models;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+import java.util.Date;
 import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
@@ -28,6 +30,14 @@ public class BankAccount {
 
   @NotBlank(message = "'numIdentityDoc' is required")
   private String numIdentityDocCustomer;
+
+  private Double amountAvailable;
+
+  @JsonFormat(pattern="yyyy-MM-dd HH:mm:ss", timezone="America/Lima")
+  private Date createdAt;
+
+  @JsonFormat(pattern="yyyy-MM-dd HH:mm:ss", timezone="America/Lima")
+  private Date updatedAt;
 
   @Valid
   @DBRef

@@ -9,6 +9,8 @@ import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
+import java.util.Date;
+
 @Slf4j
 @Service
 public class BankAccountServiceImpl implements IBankAccountService {
@@ -57,6 +59,7 @@ public class BankAccountServiceImpl implements IBankAccountService {
 
     return validRes.flatMap(resValid -> {
       if (resValid) {
+        bankAccount.setCreatedAt(new Date());
         return repository.save(bankAccount);
       } else {
         log.error("Ocurrio un problema, revisar las validaciones");
@@ -70,10 +73,12 @@ public class BankAccountServiceImpl implements IBankAccountService {
     return repository.findById(id)
             .flatMap(bankAccountDB -> {
 
-              if (bankAccount.getAccountNumber() == null) {
-                bankAccountDB.setAccountNumber(bankAccountDB.getAccountNumber());
+              bankAccountDB.setUpdatedAt(new Date());
+
+              if (bankAccount.getAmountAvailable() == null) {
+                bankAccountDB.setAmountAvailable(bankAccountDB.getAmountAvailable());
               } else {
-                bankAccountDB.setAccountNumber(bankAccount.getAccountNumber());
+                bankAccountDB.setAmountAvailable(bankAccount.getAmountAvailable());
               }
 
               return repository.save(bankAccountDB);
