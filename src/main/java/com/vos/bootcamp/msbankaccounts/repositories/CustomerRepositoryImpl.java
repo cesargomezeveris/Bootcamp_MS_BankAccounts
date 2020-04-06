@@ -8,12 +8,13 @@ import reactor.core.publisher.Mono;
 @Repository
 public class CustomerRepositoryImpl implements ICustomerRepository {
 
+  private WebClient webClient = WebClient.create("http://localhost:8001/api/customers");
+
   @Override
   public Mono<Boolean> existsCustomer(String numDocCustomer) {
-    return WebClient
-            .create()
+    return webClient
             .get()
-            .uri("http://localhost:8001/api/customers/" + numDocCustomer + "/exist")
+            .uri("/" + numDocCustomer + "/exist")
             .retrieve()
             .bodyToMono(Boolean.class);
 
@@ -21,10 +22,9 @@ public class CustomerRepositoryImpl implements ICustomerRepository {
 
   @Override
   public Mono<CustomerType> getCustomerType(String numDocCustomer) {
-    return WebClient
-            .create()
+    return webClient
             .get()
-            .uri("http://localhost:8001/api/customers/" + numDocCustomer + "/customerType")
+            .uri("/" + numDocCustomer + "/customerType")
             .retrieve()
             .bodyToMono(CustomerType.class);
   }
