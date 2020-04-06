@@ -49,11 +49,6 @@ public class BankAccountTypeServiceImpl implements IBankAccountTypeService {
   }
 
   @Override
-  public Mono<Void> delete(BankAccountType bankAccountType) {
-    return repository.delete(bankAccountType);
-  }
-
-  @Override
   public Mono<BankAccountType> deleteById(String id) {
     return repository.findById(id)
             .flatMap(bankAccountType -> repository.delete(bankAccountType)
