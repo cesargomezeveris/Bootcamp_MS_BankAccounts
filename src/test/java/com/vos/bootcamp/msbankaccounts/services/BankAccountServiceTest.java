@@ -1,5 +1,6 @@
 package com.vos.bootcamp.msbankaccounts.services;
 
+import com.vos.bootcamp.msbankaccounts.commons.Constant;
 import com.vos.bootcamp.msbankaccounts.models.BankAccount;
 import com.vos.bootcamp.msbankaccounts.models.BankAccountType;
 import com.vos.bootcamp.msbankaccounts.models.Customer;
@@ -24,26 +25,39 @@ public class BankAccountServiceTest {
 
   private final CustomerType customerType = CustomerType.builder().name("PERSONAL").build();
   private final CustomerType customerType2 = CustomerType.builder().name("CUSTOMER TYPE NOT SUPPORTED").build();
+  private final CustomerType customerType3 = CustomerType.builder().name("PERSONA VIP").build();
+  private final CustomerType customerType4 = CustomerType.builder().name("EMPRESARIAL").build();
 
   private final Customer customer = Customer.builder().names("Vicse").surnames("Ore Soto").numIdentityDoc("75772936")
           .email("vicseore@gmail.com").phoneNumber("945026794").address("Calle 1 El Agustino").typeCustomer(customerType).build();
   private final Customer customer2 = Customer.builder().names("Cristian").surnames("Huaynates Soto").numIdentityDoc("34256278")
           .email("cheles@gmail.com").phoneNumber("990123568").address("Los frailes 401").typeCustomer(customerType2).build();
+  private final Customer customer3 = Customer.builder().names("Carlos").surnames("Huaynates Soto").numIdentityDoc("34567812")
+          .email("galdoz@gmail.com").phoneNumber("990123567").address("Los frailes 401").typeCustomer(customerType3).build();
+  private final Customer customer4 = Customer.builder().names("Gilda").surnames("Soto Cueva").numIdentityDoc("78653412")
+          .email("gildaSoto@gmail.com").phoneNumber("999000888").address("Calle 1 El Agustino").typeCustomer(customerType4).build();
 
-  private final BankAccountType bankAccountType1 = BankAccountType.builder().name("AHORRO").build();
-  private final BankAccountType bankAccountType2 = BankAccountType.builder().name("CUENTA CORRIENTE").build();
+  private final BankAccountType bankAccountType1 = BankAccountType.builder().name(Constant.CUENTA_AHORRO).build();
+  private final BankAccountType bankAccountType2 = BankAccountType.builder().name(Constant.CUENTA_CORRIENTE).build();
+  private final BankAccountType bankAccountType3 = BankAccountType.builder().name(Constant.CUENTA_AHORRO_PERSONAL_VIP).build();
 
   private final BankAccount bankAccount = BankAccount.builder().accountNumber("123-123-1223123")
-          .numIdentityDocCustomer("75772936").bankAccountType(bankAccountType1).build();
+          .numIdentityDocCustomer("75772936").amountAvailable(1500.0).bankAccountType(bankAccountType1).build();
 
   private final BankAccount bankAccount2 = BankAccount.builder().accountNumber("123-123-1223124")
-          .numIdentityDocCustomer("75772936").bankAccountType(bankAccountType2).build();
+          .numIdentityDocCustomer("75772936").amountAvailable(1600.0).bankAccountType(bankAccountType2).build();
 
   private final BankAccount bankAccount3 = BankAccount.builder().accountNumber("123-123-1223121")
-          .numIdentityDocCustomer("75772936").bankAccountType(bankAccountType1).build();
+          .numIdentityDocCustomer("75772936").amountAvailable(800.0).bankAccountType(bankAccountType1).build();
 
   private final BankAccount bankAccount4 = BankAccount.builder().accountNumber("123-123-1223110")
-          .numIdentityDocCustomer("34256278").bankAccountType(bankAccountType1).build();
+          .numIdentityDocCustomer("34256278").amountAvailable(700.0).bankAccountType(bankAccountType1).build();
+
+  private final BankAccount bankAccount5 = BankAccount.builder().accountNumber("123-123-1223119")
+          .numIdentityDocCustomer("34567812").amountAvailable(700.0).bankAccountType(bankAccountType3).build();
+
+  private final BankAccount bankAccount6 = BankAccount.builder().accountNumber("123-123-1223129")
+          .numIdentityDocCustomer("78653412").amountAvailable(0.0).bankAccountType(bankAccountType1).build();
 
   @Mock
   private IBankAccountRepository bankAccountRepository;
@@ -215,6 +229,38 @@ public class BankAccountServiceTest {
     assertResults(actual, new Exception("Customer Type not supported"));
   }
 
+  @Test
+  void createBankAccount_whenInitialAmountMustBeGreater_thanAllowedAmount() {
+
+    when(customerRepository.existsCustomer(customer3.getNumIdentityDoc()))
+            .thenReturn(Mono.just(true));
+
+    when(customerRepository.getCustomerType(customer3.getNumIdentityDoc()))
+            .thenReturn(Mono.just(customerType3));
+
+    when(bankAccountRepository.save(bankAccount5)).thenReturn(Mono.just(bankAccount5));
+
+    Mono<BankAccount> actual = bankAccountService.save(bankAccount5);
+
+    assertResults(actual, new Exception("This type of account needs an initial amount to create a bank account"));
+  }
+
+  @Test
+  void createBankAccount_whenBusinessCustomer_NotAllowedBankAccountType() {
+
+    when(customerRepository.existsCustomer(customer4.getNumIdentityDoc()))
+            .thenReturn(Mono.just(true));
+
+    when(customerRepository.getCustomerType(customer4.getNumIdentityDoc()))
+            .thenReturn(Mono.just(customerType4));
+
+    when(bankAccountRepository.save(bankAccount6)).thenReturn(Mono.just(bankAccount6));
+
+    Mono<BankAccount> actual = bankAccountService.save(bankAccount6);
+
+    assertResults(actual, new Exception("This customer cannot have these types of accounts"));
+  }
+
 
   @Test
   void update_whenIdExists_returnUpdatedBankAccount() {
@@ -271,7 +317,7 @@ public class BankAccountServiceTest {
     when(bankAccountRepository.findByNumIdentityDocCustomer(customer.getNumIdentityDoc()))
             .thenReturn(Flux.just(bankAccount, bankAccount2));
 
-    Mono<Boolean> actual = bankAccountService.validateRegisterCustomer(customer.getNumIdentityDoc(), bankAccountType1.getName());
+    Mono<Boolean> actual = bankAccountService.validateRegisterCustomer(customer.getNumIdentityDoc(), bankAccountType1.getName(), bankAccount.getAmountAvailable());
 
     assertResults(actual, true);
 
@@ -288,7 +334,7 @@ public class BankAccountServiceTest {
     when(bankAccountRepository.findByNumIdentityDocCustomer(customer.getNumIdentityDoc()))
             .thenReturn(Flux.just(bankAccount, bankAccount2));
 
-    Mono<Boolean> actual = bankAccountService.validateRegisterCustomer(customer.getNumIdentityDoc(), bankAccountType1.getName());
+    Mono<Boolean> actual = bankAccountService.validateRegisterCustomer(customer.getNumIdentityDoc(), bankAccountType1.getName(), bankAccount.getAmountAvailable());
 
     assertResults(actual, new Exception("Customer not exist"));
 

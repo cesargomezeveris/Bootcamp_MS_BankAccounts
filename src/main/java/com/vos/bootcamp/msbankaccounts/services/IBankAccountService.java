@@ -17,6 +17,6 @@ public interface IBankAccountService extends ICrud<BankAccount> {
 
   public Mono<Number> getCountBankAccountsByType(String numIdeDoc, String type);
 
-  public Mono<Boolean> validateRegisterCustomer(String numDoc, String type);
+  public Mono<Boolean> validateRegisterCustomer(String numDoc, String type, Double initialAmount);
 
 }
